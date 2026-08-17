@@ -24,7 +24,7 @@ When user requests:
 3. **Gather data:**
    - Calendar: `gog calendar events` from last briefing to now
    - Email: `gog mail search` from last briefing to now (key people + "action required")
-   - JIRA: Search team issues from last briefing timeframe
+   - JIRA: Search my issues from last briefing timeframe
    - Slack: Monitor specified channels from last briefing timeframe
 
 4. **Format output** based on briefing type (morning vs EOD)
@@ -33,81 +33,77 @@ When user requests:
 
 **Calendar:** `gog calendar events` with date ranges
 
-**Email:** `gog mail search` - Focus on key leadership and "action required" messages
-- Target contacts: [YOUR_MANAGER_EMAIL], [SKIP_LEVEL_EMAIL], [OTHER_KEY_LEADERS]
-- Search patterns: "action required", leadership names
+**Email:** `gog mail search` - Focus on key contacts and "action required" messages
+- Target contacts: [YOUR_MANAGER_EMAIL], [OTHER_KEY_CONTACTS]
+- Search patterns: "action required", key contact names
 
-**JIRA:** Use Atlassian MCP with cloudId `[YOUR_JIRA_CLOUD_ID]` (format: 12345678-1234-1234-1234-123456789abc) and team filter:
-- High priority items
-- New blockers  
-- Critical/Major severity
+**JIRA:** Use Atlassian MCP with cloudId `[YOUR_JIRA_CLOUD_ID]` (format: 12345678-1234-1234-1234-123456789abc) and filters:
+- Issues assigned to me
+- High priority items in my project/sprint
+- New blockers affecting my work
+- Critical/Major severity in my area
 - Recently completed items
-- Items assigned to direct reports
 
-**Configure your team filter - examples:**
+**Configure your filter - examples:**
 ```jql
-# Team field (recommended) - replace with your team's UUID
-customfield_10001 = "[YOUR_TEAM_UUID]"
+# Your own tickets
+assignee = currentUser()
 
-# By project and assignees - replace with your project and team members
-project = "[YOUR_PROJECT]" AND assignee in ([USER1], [USER2], [USER3])
+# By project and sprint
+project = "[YOUR_PROJECT]" AND sprint in openSprints()
 
-# By component - replace with your team's component
-component = "[YOUR_TEAM_COMPONENT]"
+# By component
+component = "[YOUR_COMPONENT]" AND assignee = currentUser()
 ```
 
 **Slack Channels - customize for your organization:**
-
-**Management Channels:**
-- [your-eng-managers-channel]
-- [your-leadership-channel]  
-- [your-skip-level-channel]
-
-**Working Group Channels:**
-- [cross-functional-project-channels]
-- [technical-working-groups]
-- [strategic-initiative-channels]
 
 **Team Channels:**
 - [your-team-channel]
 - [your-team-technical-discussions]
 
+**Project/Working Group Channels:**
+- [cross-functional-project-channels]
+- [technical-working-groups]
+
+**Announcement Channels:**
+- [engineering-announcements]
+- [company-announcements]
+
 **DM Monitoring:**
 - [YOUR_MANAGER_NAME]
-- [SKIP_LEVEL_NAME] 
-- [KEY_STAKEHOLDER_NAMES]
-- Direct reports (work-related only)
+- [KEY_COLLABORATOR_NAMES]
 
 **Configuration Notes:**
 - Replace all [PLACEHOLDER] values with your specific details
-- Add/remove channels based on your organizational structure
+- Add/remove channels based on your needs
 - Ensure you have access permissions for all monitored channels
 
 ## Morning Briefing Format
 
 ```
-# [Day], [Date] Daily Brief 🕒
+# [Day], [Date] Daily Brief
 
 ## Your Agenda Today
-[Calendar events with clock emoji for meeting time (🕐 🕜 🕑 🕝 etc.) rounded to nearest half-hour, in local time]
+[Calendar events with clock emoji for meeting time rounded to nearest half-hour, in local time]
 **CRITICAL:** Always include full agenda section. Never show "No meetings" without careful verification.
 **EXCLUDE:** Do not mention or track "Heads Down" recurring time blocks.
 **SHOW:** Distinguish between completed meetings and remaining meetings based on current time.
 
 ## Recent Activity (Since Last Briefing)
-**Team JIRA Highlights:** [High priority, blockers, Critical/Major items, completions with timestamps]
+**My JIRA Updates:** [Assigned issues, status changes, new comments, blockers]
 **Slack Signals:** [Key updates from monitored channels - focus on work-related content only]  
-**Email Alerts:** [Important messages requiring action from key stakeholders]
+**Email Alerts:** [Important messages requiring action]
 
 ## Action Items for Today
-**🎯 Ongoing Priorities:** [Persistent items until marked complete - confirm before adding/removing]
-**📋 Daily Focus:** [Generated based on calendar/context and strategic priorities]
+**Ongoing Priorities:** [Persistent items until marked complete - confirm before adding/removing]
+**Daily Focus:** [Generated based on calendar/context and current work]
 
-## Key Meeting Prep
+## Meeting Prep
 [Context for each meeting from JIRA/Slack/recent activity with specific prep recommendations]
 
-## Strategic Intelligence
-[Executive-level insights connecting today's activities to broader goals and positioning]
+## Heads Up
+[Notable things happening across the team or org that may affect your work - deployments, incidents, announcements, dependency changes]
 
 [Closing question about priorities or areas needing deeper analysis]
 ```
@@ -115,7 +111,7 @@ component = "[YOUR_TEAM_COMPONENT]"
 ## EOD Briefing Format
 
 ```
-# [Day] EOD Summary 📊
+# [Day] EOD Summary
 
 ## Today's Accomplishments
 [Summary of business day activity from current business day]
@@ -136,18 +132,17 @@ component = "[YOUR_TEAM_COMPONENT]"
 - **Removal:** ALWAYS ask permission before removing items
 - **Completion:** Mark done when user confirms, notify user
 - **Carryover:** Continue until explicitly told otherwise or user confirms completion
-- **Scope:** Only track items that are the EM's direct responsibility
+- **Scope:** Only track items that are your direct responsibility
 
 ## Meeting Prep Logic
 - Search JIRA for relevant tickets involving meeting context
 - Check recent Slack conversations related to meeting topics
-- Include context for 1:1s with direct reports
 - Flag any blockers or urgent items for discussion
 
 ## Clock Emoji Mapping (Local Time)
 Round to nearest half-hour:
-- :00-:14 → hour emoji (🕐 🕑 🕒...)
-- :15-:44 → half-hour emoji (🕜 🕝 🕞...)
+- :00-:14 → hour emoji
+- :15-:44 → half-hour emoji
 - :45-:59 → next hour emoji
 
 ## Steps
@@ -155,16 +150,15 @@ Round to nearest half-hour:
 1. **Update timestamp:** Edit memory/reference_briefing_timestamp.md with current time
 2. **Get calendar:** Run `gog calendar events` and parse carefully for completed/remaining meetings
 3. **Check email:** Run `gog mail search` for key people and "action required"
-4. **Query JIRA:** Use Atlassian MCP to search team activity with detailed analysis
+4. **Query JIRA:** Use Atlassian MCP to search my issues with detailed analysis
 5. **Check Slack:** Use Slack MCP to search monitored channels focusing on work-related signals
-6. **Synthesize strategically:** Combine data with executive-level analysis and insights
-7. **Format output:** Use appropriate briefing format with strategic intelligence
+6. **Synthesize:** Combine data into a clear picture of the day
+7. **Format output:** Use appropriate briefing format
 8. **Update action items:** Review and update ongoing priorities with confirmation
 
 ## Execution Notes
 
 This skill automatically triggers agent-based execution due to its complexity:
 - Multiple data sources require parallel collection
-- Strategic synthesis benefits from dedicated processing time
 - Background execution allows continued work while briefing is prepared
 - Typical completion time: 2-5 minutes depending on data volume

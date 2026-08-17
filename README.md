@@ -1,10 +1,10 @@
 # em-pulse
 
-*Daily Intelligence for Engineering Managers*
+*Daily Intelligence for Engineers*
 
 ## What This Is
 
-An AI-powered daily briefing system that integrates calendar, JIRA, Slack, and email to provide executive-level strategic intelligence. Saves 30-60 minutes daily on information gathering and context switching.
+An AI-powered daily briefing system that integrates calendar, JIRA, Slack, and email to give you a clear picture of your day. Saves time on information gathering and context switching.
 
 ## Quick Start
 
@@ -28,18 +28,18 @@ An AI-powered daily briefing system that integrates calendar, JIRA, Slack, and e
 
 - Your agenda with meeting prep context
 - Recent activity across JIRA/Slack/email since last briefing
-- Key meeting preparation with relevant background
-- Strategic intelligence synthesis connecting daily activities to broader goals
+- Meeting preparation with relevant background
+- Heads-up on things happening across the team/org that may affect your work
 
 **Persistent Context:**
 
-- Maintains memory of ongoing initiatives and team dynamics
-- Tracks strategic priorities across weeks and months
-- Remembers stakeholder relationships and organizational context
+- Maintains memory of ongoing work items and focus areas
+- Tracks what you're working on across sessions
+- Remembers key collaborators and communication patterns
 
 **Deep Dive Capability:**
 
-- Ask follow-up questions on any topic: "Dig deeper into the schema unification delays"
+- Ask follow-up questions on any topic: "Dig deeper into [topic]"
 - Get detailed analysis with full context
 - Maintain conversation thread across multiple briefings
 
@@ -56,10 +56,9 @@ An AI-powered daily briefing system that integrates calendar, JIRA, Slack, and e
 
 ## Value Delivered
 
-- **Time Savings**: 30-60 minutes daily on manual information gathering
-- **Context Retention**: Never lose track of ongoing strategic initiatives  
-- **Decision Quality**: Better-informed choices through comprehensive intelligence
-- **Proactive Detection**: Early identification of issues and opportunities
+- **Time Savings**: Less time on manual information gathering
+- **Context Retention**: Stay on top of ongoing work across tools  
+- **Proactive Detection**: Early identification of blockers and issues
 - **Meeting Efficiency**: Show up prepared with relevant context for every meeting
 
 
@@ -68,10 +67,10 @@ An AI-powered daily briefing system that integrates calendar, JIRA, Slack, and e
 
 During setup, you'll configure:
 
-- **JIRA integration:** Your Cloud ID and team filtering (project, component, or team field)
-- **Slack monitoring:** Specific channels for management, team, and working groups  
-- **Email contacts:** Key leadership and stakeholder email addresses
-- **Team context:** Direct reports, organizational structure, and strategic priorities
+- **JIRA integration:** Your Cloud ID and issue filtering (project, component, sprint)
+- **Slack monitoring:** Team channels, project channels, and announcements  
+- **Email contacts:** Manager and key collaborator email addresses
+- **Work context:** Current projects, key collaborators, and focus areas
 
 The system will guide you through configuring these during the setup process.
 

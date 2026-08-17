@@ -1,6 +1,6 @@
 # Claude Setup Instructions for em-pulse
 
-**You are setting up em-pulse, a daily intelligence system for an Engineering Manager. This system integrates calendar, JIRA, Slack, and email to provide comprehensive daily intelligence.**
+**You are setting up em-pulse, a daily intelligence system for a Software Engineer. This system integrates calendar, JIRA, Slack, and email to provide a comprehensive daily briefing.**
 
 ## Step 1: Install the Briefing Skill
 
@@ -26,17 +26,14 @@ Create these memory files if they don't exist:
 ```markdown
 # Memory Index
 
-## Team & Context
-- [Team Context](user_team_context.md) — direct reports, stakeholders, organizational structure
-
-## Projects & Strategic Context  
-- [Strategic Priorities](project_strategic_priorities.md) — ongoing initiatives and key projects
+## Work Context
+- [Work Context](user_work_context.md) — role, projects, key collaborators
 
 ## References & Tracking
 - [Briefing Timestamp](reference_briefing_timestamp.md) — tracks last briefing for timeframe calculation
 
 ## Communication & Preferences
-- [Communication Patterns](communication_patterns.md) — key channels, leadership contacts, monitoring preferences
+- [Communication Patterns](communication_patterns.md) — key channels, contacts, monitoring preferences
 ```
 
 **memory/reference_briefing_timestamp.md**:
@@ -67,47 +64,44 @@ Ask the user for these details and create appropriate memory files:
      - Go to JIRA → Settings (gear icon) → System → General Configuration → look for "Cloud ID" or "Site ID"  
      - Or have the user run: `curl -u email:api_token https://yourcompany.atlassian.net/rest/api/3/serverInfo` and look for "cloudId" field
      - Format: `12345678-1234-1234-1234-123456789abc` (UUID format)
-   - **Team filter preference:** How to find their team's issues (team UUID, project + assignees, component, etc.)
+   - **Project/filter preference:** How to find their issues (project, component, assignee, sprint, etc.)
 
 2. **Slack Channels:**
-   - Management/leadership channels they want monitored
    - Team channels
-   - Cross-functional/working group channels
-   - Key DMs to monitor
+   - Project/working group channels
+   - Announcement channels they want monitored
 
 3. **Email Monitoring:**
-   - Direct manager email
-   - Skip-level manager email  
-   - Other key leadership contacts
+   - Manager email
+   - Other key contacts (tech leads, close collaborators)
 
-4. **Team Context:**
-   - Direct report names and roles
-   - Current major team initiatives
-   - Organizational structure
+4. **Work Context:**
+   - Current project/team name
+   - Key collaborators they work closely with
+   - Current major work items or focus areas
 
 ### Create memory files with this information:
 
-**memory/user_team_context.md**:
+**memory/user_work_context.md**:
 ```markdown
 ---
-name: team-context
-description: Team structure, direct reports, and organizational context
+name: work-context
+description: Role, projects, key collaborators, and current work focus
 metadata: 
   type: user
 ---
 
-# Team Context
+# Work Context
 
-## Direct Reports
-[List team members with roles, focus areas]
-
-## Organizational Structure
+## Role & Team
+**Team:** [Team name]
 **Manager:** [Name and email]
-**Skip Level:** [Name and email]
-**Peer Managers:** [Names and context]
 
-## Team Focus
-[Current major initiatives and strategic priorities]
+## Key Collaborators
+[List people you work closely with - tech leads, teammates on shared projects]
+
+## Current Focus
+[Current major work items, projects, or initiatives]
 ```
 
 **memory/communication_patterns.md**:
@@ -123,17 +117,16 @@ metadata:
 
 ## JIRA Configuration
 **Cloud ID:** [JIRA_CLOUD_ID]
-**Team Filter:** [JQL_QUERY]
+**Filter:** [JQL_QUERY]
 
 ## Slack Channels
-**Management:** [channel-list]
-**Team:** [channel-list]  
-**Working Groups:** [channel-list]
+**Team:** [channel-list]
+**Projects/Working Groups:** [channel-list]
+**Announcements:** [channel-list]
 
 ## Email Monitoring
 **Key Contacts:** [email-list]
 **Manager:** [manager-email]
-**Skip Level:** [skip-level-email]
 
 ## DM Monitoring
 [List of key people to monitor for work-related DMs]
@@ -142,10 +135,9 @@ metadata:
 ## Step 4: Customize the Skill
 
 Update the SKILL.md file with the user's specific:
-- JIRA Cloud ID and team filter
+- JIRA Cloud ID and filter
 - Slack channel lists  
 - Email contacts
-- Any other organizational specifics
 
 ## Step 5: Validate Each Component
 
@@ -154,9 +146,9 @@ Update the SKILL.md file with the user's specific:
 ### JIRA Validation
 ```bash
 # Test JIRA connectivity with their configuration
-mcp__atlassian__searchJiraIssuesUsingJql with their Cloud ID and team filter
+mcp__atlassian__searchJiraIssuesUsingJql with their Cloud ID and filter
 ```
-**Expected:** Should return team issues without errors
+**Expected:** Should return their issues without errors
 **If it fails:** See troubleshooting section below
 
 ### Slack Validation  
@@ -193,29 +185,29 @@ gog mail search "from:[manager-email]" --max 3
 
 **Tell the user their setup is complete and summarize what was configured:**
 
-"✅ **em-pulse is successfully configured!** Here's what I set up for you:
+"**em-pulse is successfully configured!** Here's what I set up for you:
 
 **JIRA Integration:**
 - Cloud ID: [their-actual-cloud-id]  
-- Team Filter: [their-actual-jql-query]
-- Monitoring: High priority items, blockers, recent completions
+- Filter: [their-actual-jql-query]
+- Monitoring: My assigned issues, blockers, sprint items, recent completions
 
 **Slack Monitoring:**
-- Management Channels: [list-actual-channels]
 - Team Channels: [list-actual-channels]
-- Working Groups: [list-actual-channels]
+- Project/Working Groups: [list-actual-channels]
+- Announcements: [list-actual-channels]
 - Total: [N] channels being monitored
 
 **Email Alerts:**
-- Key Contacts: [manager-name], [skip-level-name], [other-contacts]
-- Patterns: 'action required', leadership communications
+- Key Contacts: [manager-name], [other-contacts]
+- Patterns: 'action required', key contact communications
 
-**Team Context:**
-- Direct Reports: [list-actual-team-members]
-- Organizational Structure: Configured with reporting relationships
-- Strategic Priorities: Template ready for your initiatives
+**Work Context:**
+- Team/Project: [team-name]
+- Key Collaborators: [list-names]
+- Current Focus: Configured and ready
 
-**Ready to use!** Say 'brief me' anytime for your daily intelligence briefing."
+**Ready to use!** Say 'brief me' anytime for your daily briefing."
 
 ## Step 8: Explain Usage to User
 
@@ -236,8 +228,8 @@ Tell them:
 
 **"No issues found" or "JQL error":**
 - Test basic query first: `project = "PROJECTNAME"`
-- Verify team field access: try `customfield_10001 = "uuid"`
-- Fall back to assignee filter: `assignee in (user1, user2)`
+- Verify assignee filter: `assignee = currentUser()`
+- Try project + sprint: `project = "X" AND sprint in openSprints()`
 - Check issue permissions in JIRA
 
 ### Slack Issues  
@@ -286,8 +278,8 @@ The setup is complete when:
 - [ ] User can say "brief me" and get a comprehensive briefing
 - [ ] All data sources (calendar/JIRA/Slack/email) are working
 - [ ] Memory system is tracking timestamp and context properly
-- [ ] Briefing format matches expected structure with agenda, activity, prep, and strategic intelligence
+- [ ] Briefing format matches expected structure with agenda, activity, prep, and heads-up sections
 
 ---
 
-**Remember:** This system is designed to save the user 30-60 minutes daily and provide executive-level strategic intelligence. Focus on comprehensive data integration and strategic synthesis.
+**Remember:** This system is designed to save you time daily on information gathering and context switching. Focus on surfacing what matters for your day.
